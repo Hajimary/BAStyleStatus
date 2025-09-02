@@ -10,10 +10,16 @@ import TerserPlugin from 'terser-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import webpack from 'webpack';
+<<<<<<< HEAD
 // @ts-ignore
 const require = createRequire(import.meta.url);
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
 // @ts-ignore
+=======
+const require = createRequire(import.meta.url);
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
+
+>>>>>>> 9f3e09b30307e2dd3dff2c6a72b71057c2c8ab96
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
