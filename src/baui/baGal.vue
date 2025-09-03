@@ -4,6 +4,7 @@ import type { GameData, GameConfig, HistoryItem, CharacterDisplay, CGDisplay, Ch
 import { DEFAULT_CONFIG } from './galgame/types'
 import { createGameState, createCharacterDisplay, createCGDisplay } from './galgame/gameState'
 import { processNextScene, handleContainerClick } from './galgame/sceneProcessor'
+import { imageAliasManager } from './galgame/imageAliasManager'
 
 // Props
 const props = defineProps<{
@@ -302,7 +303,10 @@ const handleChoiceClick = (choiceAction: () => void) => {
 }
 
 // Initialize on mount
-onMounted(() => {
+onMounted(async () => {
+  // Load image aliases first
+  await imageAliasManager.loadImageAliases()
+  
   // Process first scene if available
   if (gameState.value.data.scenes.length > 0) {
     processScene()

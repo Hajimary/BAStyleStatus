@@ -7,9 +7,9 @@ export async function handleCommand(
   backgroundStyle: Ref<string>,
   cgImage: Ref<CGDisplay>,
   overlayOpacity: Ref<number>,
-  leftCharacter: Ref<any>,
-  centerCharacter: Ref<any>,
-  rightCharacter: Ref<any>
+  leftCharacter: Ref<CharacterDisplay>,
+  centerCharacter: Ref<CharacterDisplay>,
+  rightCharacter: Ref<CharacterDisplay>
 ) {
   if (!scene.command) return
 
@@ -21,7 +21,7 @@ export async function handleCommand(
       break
 
     case 'show':
-      handleShowCharacter(args, leftCharacter, centerCharacter, rightCharacter)
+      await handleShowCharacter(args, leftCharacter, centerCharacter, rightCharacter)
       break
 
     case 'hide':
@@ -29,11 +29,11 @@ export async function handleCommand(
       break
 
     case 'cg':
-      handleCG(args[0], cgImage, true)
+      await handleCG(args[0], cgImage, true)
       break
 
     case 'hide_cg':
-      handleCG('', cgImage, false)
+      await handleCG('', cgImage, false)
       break
 
     case 'fade':
@@ -61,43 +61,50 @@ export async function handleCommand(
 
 async function handleBackground(url: string | undefined, backgroundStyle: Ref<string>) {
   if (url) {
-    backgroundStyle.value = `url(${url})`
+    const resolvedUrl = await resolveImageUrl(url)
+    if (resolvedUrl) {
+      backgroundStyle.value = `url(${resolvedUrl})`
+    }
   }
 }
 
-function handleShowCharacter(
+async function handleShowCharacter(
   args: string[],
-  leftCharacter: Ref<any>,
-  centerCharacter: Ref<any>,
-  rightCharacter: Ref<any>
+  leftCharacter: Ref<CharacterDisplay>,
+  centerCharacter: Ref<CharacterDisplay>,
+  rightCharacter: Ref<CharacterDisplay>
 ) {
   const [_name, position, sprite] = args
   const pos = position?.toUpperCase() || 'C'
 
-  switch(pos) {
-    case 'L':
-    case 'LEFT':
-      leftCharacter.value.src = sprite || ''
-      leftCharacter.value.active = true
-      break
-    case 'C':
-    case 'CENTER':
-      centerCharacter.value.src = sprite || ''
-      centerCharacter.value.active = true
-      break
-    case 'R':
-    case 'RIGHT':
-      rightCharacter.value.src = sprite || ''
-      rightCharacter.value.active = true
-      break
+  if (sprite) {
+    const resolvedUrl = await resolveImageUrl(sprite)
+    
+    switch(pos) {
+      case 'L':
+      case 'LEFT':
+        leftCharacter.value.src = resolvedUrl || ''
+        leftCharacter.value.active = !!resolvedUrl
+        break
+      case 'C':
+      case 'CENTER':
+        centerCharacter.value.src = resolvedUrl || ''
+        centerCharacter.value.active = !!resolvedUrl
+        break
+      case 'R':
+      case 'RIGHT':
+        rightCharacter.value.src = resolvedUrl || ''
+        rightCharacter.value.active = !!resolvedUrl
+        break
+    }
   }
 }
 
 function handleHideCharacter(
   position: string | undefined,
-  leftCharacter: Ref<any>,
-  centerCharacter: Ref<any>,
-  rightCharacter: Ref<any>
+  leftCharacter: Ref<CharacterDisplay>,
+  centerCharacter: Ref<CharacterDisplay>,
+  rightCharacter: Ref<CharacterDisplay>
 ) {
   const pos = position?.toUpperCase() || ''
 
@@ -122,10 +129,13 @@ function handleHideCharacter(
   }
 }
 
-function handleCG(url: string | undefined, cgImage: Ref<CGDisplay>, show: boolean) {
+async function handleCG(url: string | undefined, cgImage: Ref<CGDisplay>, show: boolean) {
   if (show && url) {
-    cgImage.value.src = url
-    cgImage.value.active = true
+    const resolvedUrl = await resolveImageUrl(url)
+    if (resolvedUrl) {
+      cgImage.value.src = resolvedUrl
+      cgImage.value.active = true
+    }
   } else {
     cgImage.value.active = false
   }
@@ -145,9 +155,9 @@ async function handleFade(command: string, overlayOpacity: Ref<number>) {
 }
 
 function handleClear(
-  leftCharacter: Ref<any>,
-  centerCharacter: Ref<any>,
-  rightCharacter: Ref<any>,
+  leftCharacter: Ref<CharacterDisplay>,
+  centerCharacter: Ref<CharacterDisplay>,
+  rightCharacter: Ref<CharacterDisplay>,
   cgImage: Ref<CGDisplay>
 ) {
   leftCharacter.value.active = false

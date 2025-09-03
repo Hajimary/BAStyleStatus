@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import type { GameState, GameData, CharacterDisplay, CGDisplay, HistoryItem } from './types'
+import { resolveImageUrl } from './imageAliasManager'
 
 export function createGameState(gameData: GameData, _messageId: string) {
   const gameState = ref<GameState>({
@@ -32,7 +33,7 @@ export function createCGDisplay(): CGDisplay {
   }
 }
 
-export function updateCharacterSprite(
+export async function updateCharacterSprite(
   position: string,
   sprite: string,
   leftCharacter: Ref<CharacterDisplay>,
@@ -40,6 +41,7 @@ export function updateCharacterSprite(
   rightCharacter: Ref<CharacterDisplay>
 ) {
   const pos = position.toUpperCase()
+  const resolvedUrl = await resolveImageUrl(sprite)
 
   // Reset dimmed state for all
   leftCharacter.value.dimmed = false
@@ -49,21 +51,21 @@ export function updateCharacterSprite(
   switch(pos) {
     case 'L':
     case 'LEFT':
-      leftCharacter.value.src = sprite
+      leftCharacter.value.src = resolvedUrl || sprite
       leftCharacter.value.active = !!sprite
       centerCharacter.value.dimmed = true
       rightCharacter.value.dimmed = true
       break
     case 'C':
     case 'CENTER':
-      centerCharacter.value.src = sprite
+      centerCharacter.value.src = resolvedUrl || sprite
       centerCharacter.value.active = !!sprite
       leftCharacter.value.dimmed = true
       rightCharacter.value.dimmed = true
       break
     case 'R':
     case 'RIGHT':
-      rightCharacter.value.src = sprite
+      rightCharacter.value.src = resolvedUrl || sprite
       rightCharacter.value.active = !!sprite
       leftCharacter.value.dimmed = true
       centerCharacter.value.dimmed = true

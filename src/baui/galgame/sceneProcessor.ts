@@ -65,7 +65,7 @@ async function processDialogue(
 
   // Handle character sprites based on position
   if (scene.position && scene.sprite) {
-    updateCharacterSprite(
+    await updateCharacterSprite(
       scene.position,
       scene.sprite,
       leftCharacter,
