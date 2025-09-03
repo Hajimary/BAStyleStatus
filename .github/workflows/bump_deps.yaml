@@ -25,8 +25,9 @@ jobs:
           version: 10
 
       - run: |-
-          pnpm update
-          pnpm install --lockfile-only
+          corepack enable
+          corepack prepare yarn@3.4.1 --activate
+          yarn install
 
       - run: |-
           rm -rf @types
