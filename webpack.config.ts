@@ -10,10 +10,16 @@ import TerserPlugin from 'terser-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import webpack from 'webpack';
+<<<<<<< HEAD
 // @ts-ignore
 const require = createRequire(import.meta.url);
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
 // @ts-ignore
+=======
+const require = createRequire(import.meta.url);
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
+
+>>>>>>> 0de1277acdcd290241c937e8e21f28b673f4558a
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -46,7 +52,13 @@ function common_path(lhs: string, rhs: string) {
 }
 
 function glob_script_files() {
+<<<<<<< HEAD
   const files: string[] = fs.globSync(`src/**/index.{ts,js}`);
+=======
+  const files: string[] = fs
+    .globSync(`src/**/index.{ts,js}`)
+    .filter(file => process.env.CI !== 'true' || !fs.readFileSync(path.join(__dirname, file)).includes('@no-ci'));
+>>>>>>> 0de1277acdcd290241c937e8e21f28b673f4558a
 
   const results: string[] = [];
   const handle = (file: string) => {
