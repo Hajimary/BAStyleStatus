@@ -8,6 +8,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+<<<<<<< HEAD
 
 .yarn
 .idea
+=======
+>>>>>>> 6b219caa8680bd239d4c6f036ceb2d119d20bb2a

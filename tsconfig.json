@@ -28,11 +28,15 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
+<<<<<<< HEAD
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "verbatimModuleSyntax": true
+=======
+    "forceConsistentCasingInFileNames": true
+>>>>>>> 6b219caa8680bd239d4c6f036ceb2d119d20bb2a
   },
   "include": [
     "@types",
