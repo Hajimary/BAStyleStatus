@@ -116,7 +116,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       asyncChunks: true,
       chunkLoading: 'import',
       clean: true,
-      publicPath: '',
+      publicPath: 'auto',
       library: {
         type: 'module',
       },
@@ -178,6 +178,14 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               exclude: /node_modules/,
             },
             {
+              test: /\.(png|jpg|jpeg|gif|webp|svg)$/,
+              type: 'asset/resource',
+              generator: {
+                filename: 'images/[name].[hash:8][ext]'
+              },
+              exclude: /node_modules/,
+            },
+            {
               test: /\.html?$/,
               use: 'html-loader',
               exclude: /node_modules/,
@@ -189,7 +197,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                     test: /\.vue\.s(a|c)ss$/,
                     use: [
                       'vue-style-loader',
-                      { loader: 'css-loader', options: { url: false } },
+                      'css-loader',
                       'postcss-loader',
                       'sass-loader',
                     ],
@@ -197,17 +205,17 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                   },
                   {
                     test: /\.vue\.css$/,
-                    use: ['vue-style-loader', { loader: 'css-loader', options: { url: false } }, 'postcss-loader'],
+                    use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
                     exclude: /node_modules/,
                   },
                   {
                     test: /\.s(a|c)ss$/,
-                    use: [{ loader: 'css-loader', options: { url: false } }, 'postcss-loader', 'sass-loader'],
+                    use: ['css-loader', 'postcss-loader', 'sass-loader'],
                     exclude: /node_modules/,
                   },
                   {
                     test: /\.css$/,
-                    use: [{ loader: 'css-loader', options: { url: false } }, 'postcss-loader'],
+                    use: ['css-loader', 'postcss-loader'],
                     exclude: /node_modules/,
                   },
                 ]
@@ -216,7 +224,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                     test: /\.s(a|c)ss$/,
                     use: [
                       MiniCssExtractPlugin.loader,
-                      { loader: 'css-loader', options: { url: false } },
+                      'css-loader',
                       'postcss-loader',
                       'sass-loader',
                     ],
@@ -226,7 +234,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                     test: /\.css$/,
                     use: [
                       MiniCssExtractPlugin.loader,
-                      { loader: 'css-loader', options: { url: false } },
+                      'css-loader',
                       'postcss-loader',
                     ],
                     exclude: /node_modules/,

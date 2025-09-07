@@ -5,6 +5,8 @@ import { DEFAULT_CONFIG } from './galgame/types'
 import { createGameState, createCharacterDisplay, createCGDisplay } from './galgame/gameState'
 import { processNextScene, handleContainerClick } from './galgame/sceneProcessor'
 import { imageAliasManager } from './galgame/imageAliasManager'
+import GalgameDialogue from './components/GalgameDialogue.vue'
+import GalgameHistoryModal from './components/GalgameHistoryModal.vue'
 
 // Props
 const props = defineProps<{
@@ -306,7 +308,7 @@ const handleChoiceClick = (choiceAction: () => void) => {
 onMounted(async () => {
   // Load image aliases first
   await imageAliasManager.loadImageAliases()
-  
+
   // Process first scene if available
   if (gameState.value.data.scenes.length > 0) {
     processScene()
@@ -384,67 +386,23 @@ onMounted(async () => {
         :class="`galgame-history-btn galgame-history-btn-${messageId}`"
         @click.stop="toggleHistory"
       >
-        <i class="fas fa-history"></i> 履历
+        履历
       </button>
 
-      <!-- History Modal -->
-      <div
-        v-if="showHistoryModal"
-        :class="`galgame-history-modal galgame-history-modal-${messageId}`"
-        :style="{ display: showHistoryModal ? 'block' : 'none' }"
-      >
-        <div :class="`galgame-history-content galgame-history-content-${messageId}`">
-          <button
-            :class="`galgame-history-close galgame-history-close-${messageId}`"
-            @click="toggleHistory"
-          >
-            <i class="fas fa-times"></i>
-          </button>
-          <div :class="`galgame-history-title galgame-history-title-${messageId}`">
-            对话履历
-          </div>
-          <div :class="`galgame-history-list galgame-history-list-${messageId}`">
-            <div
-              v-for="(item, index) in historyList"
-              :key="index"
-              :class="`galgame-history-item galgame-history-item-${messageId}`"
-            >
-              <strong>{{ item.character }}:</strong> {{ item.text }}
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- History Modal Component -->
+      <GalgameHistoryModal
+        :visible="showHistoryModal"
+        :history-list="historyList"
+        @close="toggleHistory"
+      />
 
-      <!-- Background Gradient -->
-      <div :class="`galgame-dialogue-bg galgame-dialogue-bg-${messageId}`"></div>
-
-      <!-- Dialogue Box -->
-      <div :class="`galgame-dialogue galgame-dialogue-${messageId}`">
-        <!-- Row 1: Character Name and Organization -->
-        <div :class="`galgame-dialogue-header galgame-dialogue-header-${messageId}`">
-          <span
-            v-if="currentCharacterName"
-            :class="`galgame-name galgame-name-${messageId}`"
-          >
-            {{ currentCharacterName }}
-          </span>
-          <span :class="`galgame-org galgame-org-${messageId}`">研讨会</span>
-        </div>
-        
-        <!-- Row 2: Divider -->
-        <div :class="`galgame-divider galgame-divider-${messageId}`"></div>
-        
-        <!-- Row 3: Dialogue Text -->
-        <div :class="`galgame-text galgame-text-${messageId}`">
-          {{ currentDialogueText }}
-          <div
-            v-if="showNextIndicator"
-            :class="`galgame-next galgame-next-${messageId}`"
-          >
-            <i class="fas fa-caret-down"></i>
-          </div>
-        </div>
-      </div>
+      <!-- Dialogue Component -->
+      <GalgameDialogue
+        :show-next-indicator="showNextIndicator"
+        :current-dialogue-text="currentDialogueText"
+        :current-character-name="currentCharacterName"
+        :org-name="'研讨会'"
+      />
 
       <!-- Choices Area -->
       <div
@@ -544,7 +502,7 @@ onMounted(async () => {
 /* 角色立绘 */
 .galgame-char {
   max-width: 100%;
-  max-height: 120%;
+  max-height: 100%;
   position: absolute;
   bottom: v-bind('config.characterBottomOffset + "%"');
   opacity: 0;
@@ -606,98 +564,6 @@ onMounted(async () => {
   }
 }
 
-/* 背景渐变层 */
-.galgame-dialogue-bg {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 30%;
-  background: linear-gradient(to top, rgba(128, 128, 128, 0.4), rgba(128, 128, 128, 0));
-  z-index: 3;
-  pointer-events: none;
-}
-
-/* 对话框 */
-.galgame-dialogue {
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 30%;
-  z-index: 4;
-  user-select: none;
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  padding: 20px;
-  align-content: center;
-
-  /* 移动端对话框调整 */
-  @media (max-width: 767px) {
-    left: 5%;
-    right: 5%;
-    padding: 15px;
-  }
-}
-
-/* 对话框头部 */
-.galgame-dialogue-header {
-  display: flex;
-  align-items: baseline;
-  gap: 15px;
-}
-
-/* 角色名称 */
-.galgame-name {
-  color: white;
-  font-weight: bold;
-  font-size: 24px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  user-select: none;
-}
-
-/* 所属机构 */
-.galgame-org {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  user-select: none;
-}
-
-/* 分割线 */
-.galgame-divider {
-  height: 1px;
-  background-color: rgba(128, 128, 128, 0.5);
-  margin: 10px 0;
-}
-
-/* 对话文本 */
-.galgame-text {
-  color: white;
-  font-size: 18px;
-  line-height: 1.6;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  user-select: none;
-  position: relative;
-  overflow-y: auto;
-}
-
-/* 下一步指示器 */
-.galgame-next {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.8);
-  animation: pointer-pulse 1.5s infinite;
-  user-select: none;
-}
-
-@keyframes pointer-pulse {
-  0% { transform: scale(1); opacity: 0.7; }
-  50% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.7; }
-}
 
 /* 选项区域 */
 .galgame-choices {
@@ -754,16 +620,17 @@ onMounted(async () => {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  color: #333;
+  background-color: rgba(244, 245, 246, 1); /* 不透明 */
+  color: rgb(45,70,99);
   border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 14px;
+  border-radius: 6px;
+  padding: 4px 16px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   z-index: 10;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transform: skewX(-12deg); /* 向右倾斜7度 */
+  box-shadow: 1px 1px 0px rgba(0,0,0,0.3); /* 右下方1px阴影 */
   transition: background-color 0.2s;
 
   &:hover {
@@ -771,76 +638,10 @@ onMounted(async () => {
   }
 }
 
-/* 履历模态框 */
-.galgame-history-modal {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 20;
-}
-
-.galgame-history-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  height: 80%;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.galgame-history-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-
-  &:hover {
-    color: #333;
-  }
-}
-
-.galgame-history-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #333;
-}
-
-.galgame-history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.galgame-history-item {
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.6);
-  border-radius: 8px;
-
-  strong {
-    color: #ff69b4;
-  }
-}
 
 /* 统一图标颜色 */
 .galgame-container .fas {
   color: #ff69b4;
 }
 
-/* 保持履历按钮文字颜色不变 */
-.galgame-history-btn {
-  color: #333;
-}
 </style>
