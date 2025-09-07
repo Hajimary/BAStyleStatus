@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprite Atlas 示例</title>
+    <link rel="stylesheet" href="../../../dist/baui/CommonUI.css">
+    <link rel="stylesheet" href="../../../dist/baui/Emoji.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .demo-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .sprite-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .sprite-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 4px;
+        }
+        .sprite-name {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unity Atlas 转换为 Web Sprite 示例</h1>
+    
+    <div class="demo-section">
+        <h2>CommonUI Sprites 示例</h2>
+        <div class="sprite-container">
+            <div class="sprite-item">
+                <div class="commonui-sprite commonui-common-0"></div>
+                <span class="sprite-name">Common_0</span>
+            </div>
+            <div class="sprite-item">
+                <div class="commonui-sprite commonui-common-1"></div>
+                <span class="sprite-name">Common_1</span>
+            </div>
+            <div class="sprite-item">
+                <div class="commonui-sprite commonui-common-2"></div>
+                <span class="sprite-name">Common_2</span>
+            </div>
+            <div class="sprite-item">
+                <div class="commonui-sprite commonui-common-3"></div>
+                <span class="sprite-name">Common_3</span>
+            </div>
+            <div class="sprite-item">
+                <div class="commonui-sprite commonui-common-4"></div>
+                <span class="sprite-name">Common_4</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Emoji Sprites 示例</h2>
+        <div class="sprite-container">
+            <div class="sprite-item">
+                <div class="emoji-sprite emoji-emoji-sad"></div>
+                <span class="sprite-name">Emoji_Sad</span>
+            </div>
+            <div class="sprite-item">
+                <div class="emoji-sprite emoji-emoji-tear-1"></div>
+                <span class="sprite-name">Emoji_Tear_1</span>
+            </div>
+            <div class="sprite-item">
+                <div class="emoji-sprite emoji-emoji-question-red"></div>
+                <span class="sprite-name">Emoji_Question_Red</span>
+            </div>
+            <div class="sprite-item">
+                <div class="emoji-sprite emoji-emoji-zzz"></div>
+                <span class="sprite-name">Emoji_Zzz</span>
+            </div>
+            <div class="sprite-item">
+                <div class="emoji-sprite emoji-emoji-action"></div>
+                <span class="sprite-name">Emoji_Action</span>
+            </div>
+            <div class="sprite-item">
+                <div class="emoji-sprite emoji-emoji-heart"></div>
+                <span class="sprite-name">Emoji_Heart</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>使用说明</h2>
+        <ol>
+            <li>运行 <code>npm run generate:atlas</code> 生成CSS和TypeScript文件</li>
+            <li>在HTML中引入生成的CSS文件：<code>&lt;link rel="stylesheet" href="dist/baui/CommonUI.css"&gt;</code></li>
+            <li>使用两个类名来显示精灵：
+                <ul>
+                    <li>基础类：<code>commonui-sprite</code> 或 <code>emoji-sprite</code></li>
+                    <li>具体精灵类：<code>commonui-common-0</code> 或 <code>emoji-emoji-sad</code></li>
+                </ul>
+            </li>
+            <li>示例：<code>&lt;div class="commonui-sprite commonui-common-0"&gt;&lt;/div&gt;</code></li>
+        </ol>
+    </div>
+
+    <script>
+        // 可以通过JavaScript动态创建精灵
+        console.log('Sprite atlas example loaded successfully!');
+    </script>
+</body>
+</html>
