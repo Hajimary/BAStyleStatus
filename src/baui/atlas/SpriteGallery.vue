@@ -187,17 +187,19 @@ const copySpriteName = (atlas: string, sprite: string) => {
   flex-direction: column;
   align-items: center;
   padding: 10px;
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: linear-gradient(45deg, #333 25%, #444 25%, #444 50%, #333 50%, #333 75%, #444 75%, #444);
+  background-size: 20px 20px;
+  border: 1px solid #666;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background: #f8f8f8;
+    background: linear-gradient(45deg, #4a4a4a 25%, #5a5a5a 25%, #5a5a5a 50%, #4a4a4a 50%, #4a4a4a 75%, #5a5a5a 75%, #5a5a5a);
+    background-size: 20px 20px;
     border-color: #4CAF50;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -208,14 +210,14 @@ const copySpriteName = (atlas: string, sprite: string) => {
   min-height: 60px;
   min-width: 60px;
   padding: 10px;
-  background: #fafafa;
+  background: transparent;
   border-radius: 4px;
   margin-bottom: 8px;
 }
 
 .sprite-name {
   font-size: 12px;
-  color: #666;
+  color: #ddd;
   text-align: center;
   word-break: break-all;
   max-width: 100px;

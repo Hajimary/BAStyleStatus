@@ -1,5 +1,5 @@
 // Auto-generated sprite data for Emoji.png
-// Generated at: 2025-09-07T11:40:19.113Z
+// Generated at: 2025-09-07T11:59:50.013Z
 
 export interface EmojiSprite {
   x: number;

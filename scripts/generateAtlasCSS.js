@@ -59,9 +59,9 @@ function generateCSS(atlasName, sprites) {
   let css = `/* Auto-generated sprite sheet: ${atlasName}.png */\n`;
   css += `/* Generated at: ${new Date().toISOString()} */\n\n`;
 
-  // 基础类 - 使用相对路径引用图片
+  // 基础类 - 使用CDN绝对路径
   css += `.${className}-sprite {\n`;
-  css += `  background-image: url('../${atlasName}.png');\n`;
+  css += `  background-image: url('https://testingcf.jsdelivr.net/gh/Hajimary/BAStyleStatus@main/src/baui/atlas/${atlasName}.png');\n`;
   css += `  background-repeat: no-repeat;\n`;
   css += `  display: inline-block;\n`;
   css += `  image-rendering: pixelated;\n`;
@@ -73,7 +73,8 @@ function generateCSS(atlasName, sprites) {
   sprites.forEach(sprite => {
     const safeName = sprite.name.replace(/_/g, '-').replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
     css += `.${className}-sprite.${className}-${safeName} {\n`;
-    css += `  background-position: -${sprite.x}px -${sprite.y}px;\n`;
+    // 使用转换后的CSS坐标
+    css += `  background-position: -${sprite.cssX || sprite.x}px -${sprite.cssY || sprite.y}px;\n`;
     css += `  width: ${sprite.width}px;\n`;
     css += `  height: ${sprite.height}px;\n`;
     css += `}\n\n`;
@@ -108,6 +109,15 @@ function generateTypescript(atlasName, sprites, imagePath) {
   ts += `export const ${atlasName}ImagePath = '${imagePath}';\n`;
 
   return ts;
+}
+
+function getImageDimensions(atlasName) {
+  // 硬编码已知的图片尺寸
+  const dimensions = {
+    'CommonUI': { width: 2048, height: 2048 },
+    'Emoji': { width: 1024, height: 1024 }
+  };
+  return dimensions[atlasName] || { width: 2048, height: 2048 };
 }
 
 function processAtlasFiles() {
@@ -147,6 +157,16 @@ function processAtlasFiles() {
       }
 
       console.log(`  📦 Found ${sprites.length} sprites`);
+      
+      // 获取图片尺寸用于坐标转换
+      const imageDimensions = getImageDimensions(baseName);
+      
+      // 转换Unity坐标到CSS坐标（Y轴翻转）
+      sprites.forEach(sprite => {
+        // CSS的Y坐标 = 图片高度 - Unity的Y坐标 - 精灵高度
+        sprite.cssY = imageDimensions.height - sprite.y - sprite.height;
+        sprite.cssX = sprite.x;
+      });
 
       // 生成CSS文件
       const cssContent = generateCSS(baseName, sprites);

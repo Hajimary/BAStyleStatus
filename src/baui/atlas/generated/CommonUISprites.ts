@@ -1,5 +1,5 @@
 // Auto-generated sprite data for CommonUI.png
-// Generated at: 2025-09-07T11:40:19.110Z
+// Generated at: 2025-09-07T11:59:50.011Z
 
 export interface CommonUISprite {
   x: number;

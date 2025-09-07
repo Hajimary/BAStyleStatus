@@ -1,8 +1,8 @@
 /* Auto-generated sprite sheet: Emoji.png */
-/* Generated at: 2025-09-07T11:40:19.112Z */
+/* Generated at: 2025-09-07T11:59:50.013Z */
 
 .emoji-sprite {
-  background-image: url('../Emoji.png');
+  background-image: url('https://testingcf.jsdelivr.net/gh/Hajimary/BAStyleStatus@main/src/baui/atlas/Emoji.png');
   background-repeat: no-repeat;
   display: inline-block;
   image-rendering: pixelated;
@@ -11,169 +11,169 @@
 }
 
 .emoji-sprite.emoji-emoji-sad {
-  background-position: -70px -583px;
+  background-position: -70px -282px;
   width: 26px;
   height: 159px;
 }
 
 .emoji-sprite.emoji-emoji-tear-1 {
-  background-position: -0px -583px;
+  background-position: -0px -355px;
   width: 65px;
   height: 86px;
 }
 
 .emoji-sprite.emoji-emoji-question-red {
-  background-position: -0px -434px;
+  background-position: -0px -444px;
   width: 100px;
   height: 146px;
 }
 
 .emoji-sprite.emoji-emoji-zzz {
-  background-position: -237px -504px;
+  background-position: -237px -427px;
   width: 91px;
   height: 93px;
 }
 
 .emoji-sprite.emoji-emoji-action {
-  background-position: -105px -548px;
+  background-position: -105px -428px;
   width: 126px;
   height: 48px;
 }
 
 .emoji-sprite.emoji-emoji-bulb-2 {
-  background-position: -104px -430px;
+  background-position: -104px -480px;
   width: 132px;
   height: 114px;
 }
 
 .emoji-sprite.emoji-emoji-twinkle {
-  background-position: -244px -367px;
+  background-position: -244px -532px;
   width: 116px;
   height: 125px;
 }
 
 .emoji-sprite.emoji-emoji-heart {
-  background-position: -364px -449px;
+  background-position: -364px -470px;
   width: 115px;
   height: 105px;
 }
 
 .emoji-sprite.emoji-emoji-aggro {
-  background-position: -363px -368px;
+  background-position: -363px -590px;
   width: 92px;
   height: 66px;
 }
 
 .emoji-sprite.emoji-emoji-icecream-blue {
-  background-position: -303px -216px;
+  background-position: -303px -671px;
   width: 101px;
   height: 137px;
 }
 
 .emoji-sprite.emoji-emoji-sweat-2 {
-  background-position: -463px -202px;
+  background-position: -463px -759px;
   width: 45px;
   height: 63px;
 }
 
 .emoji-sprite.emoji-emoji-chat {
-  background-position: -0px -227px;
+  background-position: -0px -595px;
   width: 145px;
   height: 202px;
 }
 
 .emoji-sprite.emoji-emoji-exclamation-red {
-  background-position: -149px -226px;
+  background-position: -149px -616px;
   width: 87px;
   height: 182px;
 }
 
 .emoji-sprite.emoji-emoji-balloon-n {
-  background-position: -0px -1px;
+  background-position: -0px -801px;
   width: 254px;
   height: 222px;
 }
 
 .emoji-sprite.emoji-emoji-balloon-t {
-  background-position: -257px -3px;
+  background-position: -257px -825px;
   width: 253px;
   height: 196px;
 }
 
 .emoji-sprite.emoji-emoji-shy {
-  background-position: -531px -13px;
+  background-position: -531px -893px;
   width: 203px;
   height: 118px;
 }
 
 .emoji-sprite.emoji-emoji-icecream-red {
-  background-position: -795px -16px;
+  background-position: -795px -871px;
   width: 101px;
   height: 137px;
 }
 
 .emoji-sprite.emoji-emoji-exclamation-yellow {
-  background-position: -956px -1px;
+  background-position: -956px -875px;
   width: 58px;
   height: 148px;
 }
 
 .emoji-sprite.emoji-emoji-bulb-1 {
-  background-position: -914px -165px;
+  background-position: -914px -742px;
   width: 83px;
   height: 117px;
 }
 
 .emoji-sprite.emoji-emoji-icecream-yellow {
-  background-position: -559px -169px;
+  background-position: -559px -717px;
   width: 103px;
   height: 138px;
 }
 
 .emoji-sprite.emoji-emoji-sweat-1 {
-  background-position: -639px -321px;
+  background-position: -639px -590px;
   width: 73px;
   height: 113px;
 }
 
 .emoji-sprite.emoji-emoji-anxiety {
-  background-position: -464px -320px;
+  background-position: -464px -578px;
   width: 173px;
   height: 126px;
 }
 
 .emoji-sprite.emoji-emoji-question-green {
-  background-position: -721px -315px;
+  background-position: -721px -522px;
   width: 134px;
   height: 187px;
 }
 
 .emoji-sprite.emoji-emoji-steam {
-  background-position: -721px -169px;
+  background-position: -721px -710px;
   width: 189px;
   height: 145px;
 }
 
 .emoji-sprite.emoji-emoji-sigh {
-  background-position: -857px -449px;
+  background-position: -857px -453px;
   width: 141px;
   height: 122px;
 }
 
 .emoji-sprite.emoji-emoji-note {
-  background-position: -857px -316px;
+  background-position: -857px -577px;
   width: 136px;
   height: 131px;
 }
 
 .emoji-sprite.emoji-emoji-idea {
-  background-position: -463px -266px;
+  background-position: -463px -717px;
   width: 41px;
   height: 41px;
 }
 
 .emoji-sprite.emoji-emoji-tear-2 {
-  background-position: -0px -671px;
+  background-position: -0px -314px;
   width: 51px;
   height: 39px;
 }

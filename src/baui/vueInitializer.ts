@@ -16,7 +16,7 @@ const router = createRouter({
     { path: '/sprites', component: SpriteGallery },
   ],
 });
-router.replace('/sprites');
+router.replace('/baGal');
 
 $(() => {
   createApp(App).use(router).mount('#app');
