@@ -10,10 +10,17 @@ import TerserPlugin from 'terser-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import webpack from 'webpack';
+<<<<<<< HEAD
 // @ts-ignore
 const require = createRequire(import.meta.url);
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
 // @ts-ignore
+=======
+import WebpackObfuscator from 'webpack-obfuscator';
+const require = createRequire(import.meta.url);
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default;
+
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -46,7 +53,13 @@ function common_path(lhs: string, rhs: string) {
 }
 
 function glob_script_files() {
+<<<<<<< HEAD
   const files: string[] = fs.globSync(`src/**/index.{ts,js}`);
+=======
+  const files: string[] = fs
+    .globSync(`src/**/index.{ts,js}`)
+    .filter(file => process.env.CI !== 'true' || !fs.readFileSync(path.join(__dirname, file)).includes('@no-ci'));
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
 
   const results: string[] = [];
   const handle = (file: string) => {
@@ -96,6 +109,10 @@ function watch_it(compiler: webpack.Compiler) {
 }
 
 function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Configuration {
+<<<<<<< HEAD
+=======
+  const should_obfuscate = fs.readFileSync(path.join(__dirname, entry.script), 'utf-8').includes('@obfuscate');
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
   const script_filepath = path.parse(entry.script);
 
   return (_env, argv) => ({
@@ -116,7 +133,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       asyncChunks: true,
       chunkLoading: 'import',
       clean: true,
+<<<<<<< HEAD
       publicPath: 'auto',
+=======
+      publicPath: '',
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
       library: {
         type: 'module',
       },
@@ -178,6 +199,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               exclude: /node_modules/,
             },
             {
+<<<<<<< HEAD
               test: /\.(png|jpg|jpeg|gif|webp|svg)$/,
               type: 'asset/resource',
               generator: {
@@ -186,6 +208,8 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               exclude: /node_modules/,
             },
             {
+=======
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
               test: /\.html?$/,
               use: 'html-loader',
               exclude: /node_modules/,
@@ -197,7 +221,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                     test: /\.vue\.s(a|c)ss$/,
                     use: [
                       'vue-style-loader',
+<<<<<<< HEAD
                       'css-loader',
+=======
+                      { loader: 'css-loader', options: { url: false } },
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
                       'postcss-loader',
                       'sass-loader',
                     ],
@@ -205,17 +233,29 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                   },
                   {
                     test: /\.vue\.css$/,
+<<<<<<< HEAD
                     use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
+=======
+                    use: ['vue-style-loader', { loader: 'css-loader', options: { url: false } }, 'postcss-loader'],
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
                     exclude: /node_modules/,
                   },
                   {
                     test: /\.s(a|c)ss$/,
+<<<<<<< HEAD
                     use: ['css-loader', 'postcss-loader', 'sass-loader'],
+=======
+                    use: [{ loader: 'css-loader', options: { url: false } }, 'postcss-loader', 'sass-loader'],
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
                     exclude: /node_modules/,
                   },
                   {
                     test: /\.css$/,
+<<<<<<< HEAD
                     use: ['css-loader', 'postcss-loader'],
+=======
+                    use: [{ loader: 'css-loader', options: { url: false } }, 'postcss-loader'],
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
                     exclude: /node_modules/,
                   },
                 ]
@@ -224,7 +264,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                     test: /\.s(a|c)ss$/,
                     use: [
                       MiniCssExtractPlugin.loader,
+<<<<<<< HEAD
                       'css-loader',
+=======
+                      { loader: 'css-loader', options: { url: false } },
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
                       'postcss-loader',
                       'sass-loader',
                     ],
@@ -234,7 +278,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                     test: /\.css$/,
                     use: [
                       MiniCssExtractPlugin.loader,
+<<<<<<< HEAD
                       'css-loader',
+=======
+                      { loader: 'css-loader', options: { url: false } },
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
                       'postcss-loader',
                     ],
                     exclude: /node_modules/,
@@ -271,7 +319,25 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
             },
           }),
         ]
+<<<<<<< HEAD
     ).concat({ apply: watch_it }, new VueLoaderPlugin()),
+=======
+    )
+      .concat({ apply: watch_it }, new VueLoaderPlugin())
+      .concat(
+        should_obfuscate
+          ? [
+              new WebpackObfuscator({
+                controlFlowFlattening: true,
+                numbersToExpressions: true,
+                selfDefending: true,
+                simplify: true,
+                splitStrings: true,
+              }),
+            ]
+          : [],
+      ),
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
     optimization: {
       minimize: true,
       minimizer: [

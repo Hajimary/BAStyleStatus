@@ -5,24 +5,40 @@
     "watch": "webpack --mode development --watch --progress",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,scss,html}\"",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+<<<<<<< HEAD
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
     "generate:atlas": "node scripts/generateAtlasCSS.js"
+=======
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
   },
   "browserslist": [
     "defaults and partially supports es6-module"
   ],
   "devDependencies": {
+<<<<<<< HEAD
     "@eslint/js": "^9.34.0",
     "@tailwindcss/postcss": "^4.1.12",
+=======
+    "@eslint/js": "^9.35.0",
+    "@tailwindcss/postcss": "^4.1.13",
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
     "@types/jquery": "^3.5.33",
     "@types/jqueryui": "^1.12.24",
     "@types/lodash": "^4.17.20",
     "@types/toastr": "^2.1.43",
     "@types/webpack": "^5.28.5",
+<<<<<<< HEAD
     "@typescript-eslint/parser": "^8.41.0",
     "autoprefixer": "^10.4.21",
     "css-loader": "^7.1.2",
     "eslint": "^9.34.0",
+=======
+    "@typescript-eslint/parser": "^8.43.0",
+    "autoprefixer": "^10.4.21",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.35.0",
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import-x": "^4.16.1",
@@ -33,6 +49,7 @@
     "html-loader": "^5.1.0",
     "html-webpack-inline-svg-plugin": "^2.3.0",
     "html-webpack-plugin": "^5.6.4",
+<<<<<<< HEAD
     "mini-css-extract-plugin": "^2.9.4",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
@@ -44,6 +61,20 @@
     "sass-loader": "^16.0.5",
     "socket.io": "^4.8.1",
     "tailwindcss": "^4.1.12",
+=======
+    "javascript-obfuscator": "^4.1.1",
+    "mini-css-extract-plugin": "^2.9.4",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-loader": "^8.2.0",
+    "postcss-minify": "^1.2.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "sass": "^1.92.1",
+    "sass-loader": "^16.0.5",
+    "socket.io": "^4.8.1",
+    "tailwindcss": "^4.1.13",
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
     "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
@@ -54,26 +85,46 @@
     "vue-loader": "^17.4.2",
     "vue-style-loader": "^4.1.3",
     "webpack": "^5.101.3",
+<<<<<<< HEAD
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
     "@vueuse/core": "^13.8.0",
     "dedent": "^1.6.0",
+=======
+    "webpack-cli": "^6.0.1",
+    "webpack-obfuscator": "^3.5.1"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.9.0",
+    "dedent": "^1.7.0",
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
     "jquery": "^3.7.1",
     "jqueryui": "^1.11.1",
     "lodash": "^4.17.21",
     "pinia": "^3.0.3",
     "toastr": "^2.1.4",
+<<<<<<< HEAD
     "vue": "^3.5.20",
+=======
+    "vue": "^3.5.21",
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
     "vue-router": "^4.5.1",
     "yaml": "^2.8.1",
     "zod": "^4.1.5"
   },
+<<<<<<< HEAD
   "packageManager": "yarn@3.4.1+sha512.a333bf9c2557d71f5ba87dd1446cde24bb9c35301ec29dd2baba577b3f9d1ab61348b66a1324de9088c40a996c5b9203794da8bf14cab9fae6a6eccc00cb8078",
+=======
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "@tailwindcss/oxide",
+<<<<<<< HEAD
+=======
+      "javascript-obfuscator",
+>>>>>>> 9b03d2da80a6c728c2989fd2889fbeaf4260672c
       "unrs-resolver"
     ]
   }
