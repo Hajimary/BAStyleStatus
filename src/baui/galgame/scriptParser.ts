@@ -3,7 +3,7 @@ import type { GameData, GameScene, InlineAction } from './types'
 export function parseScript(scriptText: string, defaultBackground?: string): GameData {
   try {
     // Extract content between <gametext> and </gametext> tags
-    const gametextMatch = scriptText.match(/<gametext>([\s\S]*?)<\/gametext>/i)
+    const gametextMatch = scriptText.match(/.*<gametext>([\s\S]*?)<\/gametext>/i)
 
     if (!gametextMatch || !gametextMatch[1]) {
       // No gametext block found, return empty data
@@ -79,11 +79,12 @@ export function parseScript(scriptText: string, defaultBackground?: string): Gam
         return
       }
 
-      // Unknown line
+      // Skip Unknown line
+      /*
       tempScenes.push({
         type: 'unknown',
         original: line,
-      })
+      })*/
     })
 
     // Add default background if specified

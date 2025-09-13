@@ -57,68 +57,35 @@ const handleClose = () => {
 </template>
 
 <style scoped lang="scss">
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+@import '../styles/modal.scss';
 
 /* 履历模态框 */
 .galgame-history-modal {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 20;
+  @include modal-overlay;
 }
 
 .galgame-history-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  height: 80%;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  @include modal-content(90%, 80%, 600px);
 }
 
 /* 固定头部区域 */
 .galgame-history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 20px 0 20px;
-  flex-shrink: 0;
-}
-
-.galgame-history-close {
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-
-  &:hover {
-    color: #333;
-  }
+  @include modal-header(true); // 使用渐变背景
 }
 
 .galgame-history-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
+  @include modal-title;
+}
+
+.galgame-history-close {
+  @include modal-close-button;
 }
 
 .galgame-history-list {
+  @include modal-body;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 15px 20px 20px 20px;
-  overflow-y: auto;
-  flex: 1;
 }
 
 .galgame-history-item {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import type { GameData, GameConfig, HistoryItem, CharacterDisplay, CGDisplay, Choice } from './galgame/types'
 import { DEFAULT_CONFIG } from './galgame/types'
 import { createGameState, createCharacterDisplay, createCGDisplay } from './galgame/gameState'
@@ -9,12 +9,14 @@ import { parseScript } from './galgame/scriptParser'
 import GalgameDialogue from './components/GalgameDialogue.vue'
 import GalgameHistoryModal from './components/GalgameHistoryModal.vue'
 import GalgameChoices from './components/GalgameChoices.vue'
+import GalgameSettingsModal from './components/GalgameSettingsModal.vue'
 
 // Props
 const props = defineProps<{
   messageId: string
   gameData: GameData
   config?: Partial<GameConfig>
+  hideUI?: boolean
 }>()
 
 const defaultGameData: GameData = {
@@ -266,6 +268,9 @@ const gameState = createGameState(gameData, props.messageId)
 const showHistoryModal = ref(false)
 const historyList = ref<HistoryItem[]>([])
 
+// Settings modal
+const showSettingsModal = ref(false)
+
 // Character positions
 const leftCharacter = ref<CharacterDisplay>(createCharacterDisplay())
 const centerCharacter = ref<CharacterDisplay>(createCharacterDisplay())
@@ -287,9 +292,56 @@ const choices = ref<Choice[]>([])
 // Overlay
 const overlayOpacity = ref(0)
 
+// Dialogue component ref
+const dialogueRef = ref<InstanceType<typeof GalgameDialogue> | null>(null)
+
+// Auto play state
+const isAutoPlay = ref(false)
+let autoPlayTimer: ReturnType<typeof setTimeout> | null = null
+
+// Hide UI state (local state that can be toggled)
+const isUIHidden = ref(props.hideUI || false)
+
 // Methods
 const onContainerClick = (e: Event) => {
-  handleContainerClick(e, gameState, processScene)
+  e.stopPropagation()
+
+
+  // If UI is hidden, restore it on first click
+  if (isUIHidden.value) {
+    isUIHidden.value = false
+    return // Don't advance dialogue on restore click
+  }
+
+  // If history modal is open, don't advance dialogue
+  if (showHistoryModal.value) {
+    return
+  }
+  if (showSettingsModal.value) {
+    return
+  }
+
+  const state = gameState.value
+  //if (!state || state.processing) return
+  if (state.showingChoices) return
+
+  // Check if typewriter is still running
+  if (dialogueRef.value && currentDialogueText.value) {
+    // Try to skip the typewriter effect first
+    const beforeText = dialogueRef.value.displayedText
+    dialogueRef.value.skipTypewriter()
+
+    // If text was not fully displayed, we skipped the typewriter
+    // Don't advance to next scene yet
+    if (beforeText !== currentDialogueText.value) {
+      return
+    }
+  }
+
+  // Handle click for next dialogue
+  if (state.waitingForClick) {
+    processScene()
+  }
 }
 
 const processScene = async () => {
@@ -314,18 +366,102 @@ const toggleHistory = () => {
   showHistoryModal.value = !showHistoryModal.value
 }
 
+const toggleSettings = () => {
+  showSettingsModal.value = !showSettingsModal.value
+}
+
 const handleChoiceSelection = (choiceAction: () => void) => {
   // Execute the choice action (triggers setinput and updates index)
   choiceAction()
-  
+
   // Hide choices UI
   showChoices.value = false
-  
+
+  // Disable auto play when choice is made
+  if (isAutoPlay.value) {
+    isAutoPlay.value = false
+    clearAutoPlayTimer()
+  }
+
   // Continue processing the next scene
   setTimeout(() => {
     processScene()
   }, 50)
 }
+
+// Toggle auto play mode
+const toggleAutoPlay = () => {
+  isAutoPlay.value = !isAutoPlay.value
+
+  if (!isAutoPlay.value) {
+    clearAutoPlayTimer()
+  } else {
+    // If currently waiting and text is fully displayed, trigger auto advance
+    checkAutoAdvance()
+  }
+}
+
+// Toggle hide UI mode
+const toggleHideUI = () => {
+  isUIHidden.value = !isUIHidden.value
+
+  // Disable auto play when hiding UI
+  if (isUIHidden.value && isAutoPlay.value) {
+    isAutoPlay.value = false
+    clearAutoPlayTimer()
+  }
+}
+
+// Clear auto play timer
+const clearAutoPlayTimer = () => {
+  if (autoPlayTimer) {
+    clearTimeout(autoPlayTimer)
+    autoPlayTimer = null
+  }
+}
+
+// Check if we should auto advance
+const checkAutoAdvance = () => {
+  if (!isAutoPlay.value) return
+
+  // Don't auto advance during choices
+  if (showChoices.value || gameState.value.showingChoices) {
+    isAutoPlay.value = false
+    return
+  }
+
+  // Check if text is fully displayed
+  if (dialogueRef.value &&
+      !dialogueRef.value.isTyping &&
+      currentDialogueText.value &&
+      dialogueRef.value.displayedText === currentDialogueText.value &&
+      gameState.value.waitingForClick) {
+
+    // Wait 2 seconds then advance
+    clearAutoPlayTimer()
+    autoPlayTimer = setTimeout(() => {
+      if (isAutoPlay.value && !showChoices.value && gameState.value.waitingForClick) {
+        processScene()
+      }
+    }, 2000)
+  }
+}
+
+// Watch for typing completion to trigger auto advance
+watch(() => dialogueRef.value?.isTyping, (newVal, oldVal) => {
+  if (oldVal === true && newVal === false) {
+    // Typing just finished
+    checkAutoAdvance()
+  }
+})
+
+// Watch for showChoices to disable auto play
+watch(showChoices, (newVal) => {
+  if (newVal && isAutoPlay.value) {
+    isAutoPlay.value = false
+    clearAutoPlayTimer()
+  }
+})
 
 // Initialize on mount
 onMounted(async () => {
@@ -404,13 +540,45 @@ onMounted(async () => {
         <img :src="cgImage.src" alt="">
       </div>
 
-      <!-- History Button -->
-      <button
-        :class="`galgame-history-btn galgame-history-btn-${messageId}`"
-        @click.stop="toggleHistory"
-      >
-        履历
-      </button>
+      <!-- UI Controls Container -->
+      <div v-show="!isUIHidden" class="galgame-ui-controls">
+        <!-- History Button -->
+        <button
+          :class="`galgame-btn galgame-btn-${messageId}`"
+          @click.stop="toggleHistory"
+        >
+          履历
+        </button>
+
+        <!-- Auto Play Button -->
+        <button
+          :class="[
+            'galgame-btn',
+            `galgame-btn-${messageId}`,
+            'galgame-btn-auto',
+            { 'active': isAutoPlay }
+          ]"
+          @click.stop="toggleAutoPlay"
+        >
+          自动
+        </button>
+
+        <!-- Hide UI Button -->
+        <button
+          :class="`galgame-btn galgame-btn-${messageId}`"
+          @click.stop="toggleHideUI"
+        >
+          隐藏
+        </button>
+
+        <!-- Settings Button -->
+        <button
+          :class="`galgame-btn galgame-btn-${messageId}`"
+          @click.stop="toggleSettings"
+        >
+          配置
+        </button>
+      </div>
 
       <!-- History Modal Component -->
       <GalgameHistoryModal
@@ -419,12 +587,19 @@ onMounted(async () => {
         @close="toggleHistory"
       />
 
+      <!-- Settings Modal Component -->
+      <GalgameSettingsModal
+        :visible="showSettingsModal"
+        @close="toggleSettings"
+      />
+
       <!-- Dialogue Component -->
       <GalgameDialogue
+        v-show="!isUIHidden"
+        ref="dialogueRef"
         :show-next-indicator="showNextIndicator"
         :current-dialogue-text="currentDialogueText"
         :current-character-name="currentCharacterName"
-        :org-name="'研讨会'"
       />
 
       <!-- Choices Component -->
@@ -445,6 +620,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+@import 'styles/global.scss';
 
 .roleplay_galgame {
   width: 100%;
@@ -594,29 +770,31 @@ onMounted(async () => {
   z-index: 7;
 }
 
-/* 履历按钮 */
-.galgame-history-btn {
+
+
+/* UI控制按钮容器 */
+.galgame-ui-controls {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(244, 245, 246, 1); /* 不透明 */
-  color: rgb(45,70,99);
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 4px 16px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
   z-index: 10;
-  transform: skewX(-12deg); /* 向右倾斜7度 */
-  box-shadow: 1px 1px 0px rgba(0,0,0,0.3); /* 右下方1px阴影 */
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: rgba(240, 240, 240, 0.9);
-  }
+  display: flex;
+  flex-direction: row-reverse; /* 从右到左排列：履历、自动、隐藏 */
+  gap: 4px;
+  align-items: center;
+  width: auto; /* 宽度自适应 */
 }
 
+
+/* 旋转高光动画 */
+@keyframes rotating-highlight {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
 
 /* 统一图标颜色 */
 .galgame-container .fas {

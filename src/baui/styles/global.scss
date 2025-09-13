@@ -1,0 +1,65 @@
+/* 全局游戏按钮样式 */
+.galgame-btn {
+  position: relative;
+  background-color: rgba(244, 245, 246, 1);
+  color: rgb(45, 70, 99);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 4px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transform: skewX(-12deg);
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
+  min-width: fit-content;
+
+  &:hover {
+    background-color: rgba(240, 240, 240, 0.9);
+  }
+
+  /* 禁用状态 */
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: rgba(244, 245, 246, 1);
+    }
+  }
+}
+
+/* 自动按钮特殊样式 */
+.galgame-btn-auto {
+  &.active {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: white;
+    font-weight: bolder;
+
+    &:hover {
+      background: linear-gradient(135deg, #FFC700, #FF9500);
+    }
+  }
+}
+
+/* 主要按钮样式（用于选择、确认等重要操作） */
+.galgame-btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-color: #667eea;
+
+  &:hover {
+    opacity: 0.9;
+    background: linear-gradient(135deg, #5a67d8, #6b4299);
+  }
+}
+
+/* 次要按钮样式 */
+.galgame-btn-secondary {
+  background-color: rgba(220, 220, 220, 1);
+
+  &:hover {
+    background-color: rgba(200, 200, 200, 1);
+  }
+}
