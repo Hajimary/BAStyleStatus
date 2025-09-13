@@ -31,7 +31,7 @@ const handleChoiceClick = (choiceAction: () => void) => {
       <button
         v-for="(choice, index) in choices"
         :key="index"
-        class="galgame-btn galgame-btn-primary galgame-choice-btn"
+        class="galgame-btn galgame-choice-btn"
         @click.stop="handleChoiceClick(choice.action)"
       >
         {{ choice.text }}

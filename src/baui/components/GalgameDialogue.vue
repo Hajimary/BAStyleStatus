@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import { ref, watch, onUnmounted, onMounted, computed } from 'vue'
-import { bauiSettings, initializeBauiSettings } from '../settings'
+import { ref, watch, onUnmounted, computed } from 'vue'
 import { getOrganizationByCharacter } from '../galgame/characterConstants'
 
 interface Props {
   showNextIndicator?: boolean
   currentDialogueText?: string
   currentCharacterName?: string
+  charsPerSecond?: number // 打字速度，由外部传入
 }
 
 //@ts-ignore
 const props = withDefaults(defineProps<Props>(), {
   showNextIndicator: false,
   currentDialogueText: '',
-  currentCharacterName: ''
+  currentCharacterName: '',
+  charsPerSecond: 10 // 默认10字/秒
 })
 
 // 显示的文本（打字机效果）
@@ -23,17 +24,18 @@ let typewriterTimer: ReturnType<typeof setInterval> | null = null
 // 打字机是否正在进行
 const isTyping = ref(false)
 
-// 打字机效果配置
-const charsPerSecond = ref(10)
-const intervalMs = ref(100)
+// 打字机效果配置 - 根据外部传入的速度计算间隔
+const intervalMs = computed(() => 1000 / (props.charsPerSecond || 10))
 
 // 计算属性：根据角色名获取组织名
 const orgName = computed(() => {
   return getOrganizationByCharacter(props.currentCharacterName)
 })
 
-// 监听文本变化
-watch(() => props.currentDialogueText, (newText) => {
+// 启动打字机效果的函数
+const startTypewriter = () => {
+  const text = props.currentDialogueText
+
   // 清除之前的定时器
   if (typewriterTimer) {
     clearInterval(typewriterTimer)
@@ -44,7 +46,7 @@ watch(() => props.currentDialogueText, (newText) => {
   displayedText.value = ''
   isTyping.value = false
 
-  if (!newText) {
+  if (!text) {
     return
   }
 
@@ -52,8 +54,8 @@ watch(() => props.currentDialogueText, (newText) => {
   isTyping.value = true
   let charIndex = 0
   typewriterTimer = setInterval(() => {
-    if (charIndex < newText.length) {
-      displayedText.value = newText.slice(0, charIndex + 1)
+    if (charIndex < text.length) {
+      displayedText.value = text.slice(0, charIndex + 1)
       charIndex++
     } else {
       // 文本显示完毕，清除定时器
@@ -64,13 +66,18 @@ watch(() => props.currentDialogueText, (newText) => {
       isTyping.value = false
     }
   }, intervalMs.value)
+}
+
+// 监听文本变化
+watch(() => props.currentDialogueText, () => {
+  startTypewriter()
 }, { immediate: true })
 
-// 初始化设置
-onMounted(async () => {
-  await initializeBauiSettings()
-  charsPerSecond.value = bauiSettings.chars_per_second || 10
-  intervalMs.value = 1000 / charsPerSecond.value
+// 监听速度变化，如果正在打字则重新开始
+watch(() => props.charsPerSecond, () => {
+  if (isTyping.value && props.currentDialogueText) {
+    startTypewriter()
+  }
 })
 
 // 组件卸载时清理定时器

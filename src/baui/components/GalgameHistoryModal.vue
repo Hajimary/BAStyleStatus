@@ -65,7 +65,7 @@ const handleClose = () => {
 }
 
 .galgame-history-content {
-  @include modal-content(90%, 80%, 600px);
+  @include modal-content(90%, auto, 600px, 80vh);
 }
 
 /* 固定头部区域 */
@@ -86,6 +86,27 @@ const handleClose = () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-height: calc(80vh - 100px); /* 减去头部的高度 */
+  overflow-y: auto;
+
+  /* 滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(181, 218, 237, 0.5);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(181, 218, 237, 0.8);
+    }
+  }
 }
 
 .galgame-history-item {

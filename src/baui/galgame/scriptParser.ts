@@ -2,8 +2,12 @@ import type { GameData, GameScene, InlineAction } from './types'
 
 export function parseScript(scriptText: string, defaultBackground?: string): GameData {
   try {
+    // Remove <think></think> and <thinking></thinking> blocks first
+    let cleanedText = scriptText.replace(/<think>[\s\S]*?<\/think>/gi, '')
+    cleanedText = cleanedText.replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
+
     // Extract content between <gametext> and </gametext> tags
-    const gametextMatch = scriptText.match(/.*<gametext>([\s\S]*?)<\/gametext>/i)
+    const gametextMatch = cleanedText.match(/.*<gametext>([\s\S]*?)<\/gametext>/i)
 
     if (!gametextMatch || !gametextMatch[1]) {
       // No gametext block found, return empty data

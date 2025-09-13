@@ -6,6 +6,7 @@ import { createGameState, createCharacterDisplay, createCGDisplay } from './galg
 import { processNextScene, handleContainerClick } from './galgame/sceneProcessor'
 import { imageAliasManager } from './galgame/imageAliasManager'
 import { parseScript } from './galgame/scriptParser'
+import { bauiSettings, initializeBauiSettings } from './galgame/settings'
 import GalgameDialogue from './components/GalgameDialogue.vue'
 import GalgameHistoryModal from './components/GalgameHistoryModal.vue'
 import GalgameChoices from './components/GalgameChoices.vue'
@@ -271,6 +272,12 @@ const historyList = ref<HistoryItem[]>([])
 // Settings modal
 const showSettingsModal = ref(false)
 
+// Auto play delay (reactive)
+const autoPlayDelay = ref(2000)
+
+// Typing speed (reactive)
+const typingSpeed = ref(10)
+
 // Character positions
 const leftCharacter = ref<CharacterDisplay>(createCharacterDisplay())
 const centerCharacter = ref<CharacterDisplay>(createCharacterDisplay())
@@ -370,6 +377,18 @@ const toggleSettings = () => {
   showSettingsModal.value = !showSettingsModal.value
 }
 
+// Handle settings save
+const handleSettingsSave = (newSettings: any) => {
+  // Update the reactive auto play delay
+  if (newSettings.auto_play_delay) {
+    autoPlayDelay.value = newSettings.auto_play_delay
+  }
+  // Update the reactive typing speed
+  if (newSettings.chars_per_second) {
+    typingSpeed.value = newSettings.chars_per_second
+  }
+}
+
 const handleChoiceSelection = (choiceAction: () => void) => {
   // Execute the choice action (triggers setinput and updates index)
   choiceAction()
@@ -437,13 +456,13 @@ const checkAutoAdvance = () => {
       dialogueRef.value.displayedText === currentDialogueText.value &&
       gameState.value.waitingForClick) {
 
-    // Wait 2 seconds then advance
+    // Use reactive delay value
     clearAutoPlayTimer()
     autoPlayTimer = setTimeout(() => {
       if (isAutoPlay.value && !showChoices.value && gameState.value.waitingForClick) {
         processScene()
       }
-    }, 2000)
+    }, autoPlayDelay.value)
   }
 }
 
@@ -465,6 +484,13 @@ watch(showChoices, (newVal) => {
 
 // Initialize on mount
 onMounted(async () => {
+  // Initialize settings
+  await initializeBauiSettings()
+
+  // Set initial auto play delay and typing speed from settings
+  autoPlayDelay.value = bauiSettings.auto_play_delay || 2000
+  typingSpeed.value = bauiSettings.chars_per_second || 10
+
   // Load image aliases first
   await imageAliasManager.loadImageAliases()
 
@@ -591,6 +617,7 @@ onMounted(async () => {
       <GalgameSettingsModal
         :visible="showSettingsModal"
         @close="toggleSettings"
+        @save="handleSettingsSave"
       />
 
       <!-- Dialogue Component -->
@@ -600,6 +627,7 @@ onMounted(async () => {
         :show-next-indicator="showNextIndicator"
         :current-dialogue-text="currentDialogueText"
         :current-character-name="currentCharacterName"
+        :chars-per-second="typingSpeed"
       />
 
       <!-- Choices Component -->

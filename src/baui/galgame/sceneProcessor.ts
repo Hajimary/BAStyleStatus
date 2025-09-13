@@ -2,7 +2,7 @@ import type { Ref } from 'vue'
 import type { GameState, GameScene, HistoryItem, CharacterDisplay, CGDisplay, Choice } from './types'
 import { updateCharacterSprite, addToHistory } from './gameState'
 import { handleCommand } from './commandHandler'
-import { bauiSettings } from '../settings'
+import { bauiSettings } from './settings'
 
 export async function processNextScene(
   gameState: Ref<GameState>,

@@ -14,7 +14,7 @@
 }
 
 // 模态框内容容器
-@mixin modal-content($width: 90%, $height: auto, $max-width: 500px) {
+@mixin modal-content($width: 90%, $height: auto, $max-width: 500px, $max-height: 80%) {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -22,6 +22,7 @@
   width: $width;
   height: $height;
   max-width: $max-width;
+  max-height: $max-height;
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
   display: flex;
@@ -37,13 +38,31 @@
   align-items: center;
   padding: 20px;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 
   @if $bg-gradient {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    // 主背景色 - 淡蓝色基底
+    background: rgb(229, 242, 246);
+    color: #2c5f7c;
+
   } @else {
     background-color: transparent;
     color: #333;
+  }
+
+
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 500px;
+    height: 100%;
+    background: url('https://kivo.wiki/assets/options-DoCj5sFX.webp') no-repeat top right;
+    background-size: cover;
+    pointer-events: none;
   }
 }
 
@@ -52,19 +71,24 @@
   font-size: 20px;
   font-weight: bold;
   color: $color;
+  position: relative;
+  z-index: 1; // 确保文字在三角形色块上方
 }
 
 // 模态框关闭按钮
-@mixin modal-close-button($color: white) {
+@mixin modal-close-button($color: #2c5f7c) {
   background: transparent;
   border: none;
   font-size: 24px;
   cursor: pointer;
   color: $color;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 1; // 确保按钮在三角形色块上方
 
   &:hover {
     opacity: 0.7;
+    transform: scale(1.1);
   }
 }
 
@@ -110,11 +134,13 @@
 // 主要操作按钮样式
 @mixin modal-button-primary {
   @include modal-button;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #b5daed 0%, #81c7e8 100%);
+  color: #2c5f7c;
+  font-weight: 600;
 
   &:hover {
-    opacity: 0.9;
+    background: linear-gradient(135deg, #81c7e8 0%, #5ab3dd 100%);
+    color: white;
   }
 }
 

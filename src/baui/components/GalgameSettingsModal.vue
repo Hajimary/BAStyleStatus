@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { BauiOption } from '../settings'
-import { bauiSettings, initializeBauiSettings, setSettings } from '../settings'
+import type { BauiOption } from '../galgame/settings'
+import { bauiSettings, initializeBauiSettings, setSettings } from '../galgame/settings'
 
 interface Props {
   visible?: boolean
@@ -20,7 +20,8 @@ const emit = defineEmits<{
 // Local settings state
 const localSettings = ref<BauiOption>({
   input_mode: '直接发送',
-  chars_per_second: 10
+  chars_per_second: 10,
+  auto_play_delay: 2000
 })
 
 // Input mode options
@@ -37,7 +38,8 @@ watch(() => props.visible, async (newVal) => {
     await initializeBauiSettings()
     localSettings.value = {
       input_mode: bauiSettings.input_mode,
-      chars_per_second: bauiSettings.chars_per_second
+      chars_per_second: bauiSettings.chars_per_second,
+      auto_play_delay: bauiSettings.auto_play_delay
     }
   }
 })
@@ -53,10 +55,17 @@ const handleSave = async () => {
     localSettings.value.chars_per_second = 10
   }
 
+  // Validate auto_play_delay
+  const delay = Number(localSettings.value.auto_play_delay)
+  if (isNaN(delay) || delay < 500 || delay > 10000) {
+    localSettings.value.auto_play_delay = 2000
+  }
+
   // Save settings
   const settingsToSave: BauiOption = {
     input_mode: localSettings.value.input_mode,
-    chars_per_second: localSettings.value.chars_per_second
+    chars_per_second: localSettings.value.chars_per_second,
+    auto_play_delay: localSettings.value.auto_play_delay
   }
 
   // Save using the new setSettings method
@@ -136,6 +145,27 @@ const handleSave = async () => {
             对话文字显示速度 (1-100)
           </div>
         </div>
+
+        <!-- Auto Play Delay Setting -->
+        <div class="galgame-settings-item">
+          <label class="galgame-settings-label">
+            自动播放延迟
+          </label>
+          <div class="galgame-settings-input-group">
+            <input
+              v-model.number="localSettings.auto_play_delay"
+              type="number"
+              min="500"
+              max="10000"
+              step="100"
+              class="galgame-settings-input"
+            >
+            <span class="galgame-settings-unit">毫秒</span>
+          </div>
+          <div class="galgame-settings-hint">
+            自动播放模式下，文字显示完成后的等待时间 (500-10000毫秒)
+          </div>
+        </div>
       </div>
 
       <!-- Buttons -->
@@ -166,7 +196,7 @@ const handleSave = async () => {
 }
 
 .galgame-settings-content {
-  @include modal-content;
+  @include modal-content(90%, auto, 500px, 80vh);
 }
 
 /* 固定头部 */
@@ -185,6 +215,27 @@ const handleSave = async () => {
 /* 设置表单 */
 .galgame-settings-form {
   @include modal-body;
+  max-height: calc(80vh - 140px); /* 减去头部和底部按钮的高度 */
+  overflow-y: auto;
+
+  /* 滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(18, 20, 23, 0.5);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(103, 122, 133, 0.8);
+    }
+  }
 }
 
 .galgame-settings-item {

@@ -8,12 +8,14 @@ export enum StorageMode {
 export interface BauiOption {
   input_mode: '直接发送' | '覆盖输入' | '尾附输入' | '自动推进';
   chars_per_second: number;
+  auto_play_delay: number; // 自动播放延迟（毫秒）
 }
 
 // Default settings
 const DefaultSetting: BauiOption = {
   input_mode: '直接发送',
   chars_per_second: 10,
+  auto_play_delay: 2000, // 默认2秒
 };
 
 // Current storage mode (default to localStorage)
@@ -46,6 +48,14 @@ export function VerifySettings(settings: any): settings is BauiOption {
     if (typeof settings.chars_per_second !== 'number' ||
         settings.chars_per_second <= 0 ||
         settings.chars_per_second > 100) {
+      return false;
+    }
+  }
+
+  if ('auto_play_delay' in settings) {
+    if (typeof settings.auto_play_delay !== 'number' ||
+        settings.auto_play_delay < 500 ||
+        settings.auto_play_delay > 10000) {
       return false;
     }
   }
@@ -123,6 +133,13 @@ function validateAndNormalizeSettings(settings: Partial<BauiOption>): BauiOption
       mergedSettings.chars_per_second <= 0 ||
       mergedSettings.chars_per_second > 100) {
     mergedSettings.chars_per_second = 10;
+  }
+
+  // Validate auto_play_delay
+  if (typeof mergedSettings.auto_play_delay !== 'number' ||
+      mergedSettings.auto_play_delay < 500 ||
+      mergedSettings.auto_play_delay > 10000) {
+    mergedSettings.auto_play_delay = 2000;
   }
 
   return mergedSettings;

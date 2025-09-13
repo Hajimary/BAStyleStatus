@@ -5,7 +5,7 @@ import Diary from './日记.vue';
 import RoleplayOptions from './选择框.vue';
 import BaGal from './baGal.vue';
 import SpriteGallery from './atlas/SpriteGallery.vue';
-import { initializeBauiSettings } from './settings';
+import { initializeBauiSettings } from './galgame/settings';
 
 const router = createRouter({
   history: createMemoryHistory(),
