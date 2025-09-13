@@ -5,6 +5,7 @@ import { DEFAULT_CONFIG } from './galgame/types'
 import { createGameState, createCharacterDisplay, createCGDisplay } from './galgame/gameState'
 import { processNextScene, handleContainerClick } from './galgame/sceneProcessor'
 import { imageAliasManager } from './galgame/imageAliasManager'
+import { parseScript } from './galgame/scriptParser'
 import GalgameDialogue from './components/GalgameDialogue.vue'
 import GalgameHistoryModal from './components/GalgameHistoryModal.vue'
 import GalgameChoices from './components/GalgameChoices.vue'
@@ -229,8 +230,38 @@ const config = computed(() => ({
   ...props.config
 }))
 
+// Initialize game data
+const initializeGameData = (): GameData => {
+  try {
+    // 尝试获取当前楼层的消息内容
+    const message_id = getCurrentMessageId()
+    const chat_messages = getChatMessages(message_id)
+
+    if (chat_messages && chat_messages.length > 0) {
+      const chat_message = chat_messages[0]
+
+      // 尝试解析聊天内容
+      if (chat_message.message) {
+        const parsedData = parseScript(chat_message.message)
+
+        // 如果解析成功且有场景内容，使用解析的数据
+        if (parsedData.scenes && parsedData.scenes.length > 0) {
+          console.log('Using parsed game data from chat message')
+          return parsedData
+        }
+      }
+    }
+  } catch (error) {
+    console.log('Failed to parse chat message, using default game data:', error)
+  }
+
+  // 如果解析失败或没有内容，使用默认数据
+  return defaultGameData as GameData
+}
+
 // State
-const gameState = createGameState(defaultGameData as GameData, props.messageId)
+const gameData = initializeGameData()
+const gameState = createGameState(gameData, props.messageId)
 
 const showHistoryModal = ref(false)
 const historyList = ref<HistoryItem[]>([])

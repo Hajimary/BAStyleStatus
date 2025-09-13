@@ -8,8 +8,8 @@ const DefaultSetting: BauiOption = {
 
 const variable_option = {
   type: 'script',
-  script_id: typeof getScriptId === 'function' ? getScriptId() : 'baui-script-id',
-} as const;
+  script_id: typeof getScriptId === 'function' ? '' : 'baui-script-id',
+} as const;//getScriptId()
 
 export function VerifySettings(settings: any): settings is BauiOption {
   if (!settings || typeof settings !== 'object') {
@@ -29,6 +29,7 @@ export function VerifySettings(settings: any): settings is BauiOption {
 }
 
 export async function GetBauiSettings(): Promise<BauiOption> {
+  return DefaultSetting;
   const settings = getVariables(variable_option) || {};
 
   if (!VerifySettings(settings)) {
