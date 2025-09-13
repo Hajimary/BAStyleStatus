@@ -7,6 +7,7 @@ import { processNextScene, handleContainerClick } from './galgame/sceneProcessor
 import { imageAliasManager } from './galgame/imageAliasManager'
 import GalgameDialogue from './components/GalgameDialogue.vue'
 import GalgameHistoryModal from './components/GalgameHistoryModal.vue'
+import GalgameChoices from './components/GalgameChoices.vue'
 
 // Props
 const props = defineProps<{
@@ -15,15 +16,13 @@ const props = defineProps<{
   config?: Partial<GameConfig>
 }>()
 
-const defaultGameData = {
+const defaultGameData: GameData = {
   "scenes": [
     {
       "type": "dialogue",
       "character": "旁白",
-      "position": null,
       "sprite": "",
       "text": "橘望と光の訪問を受けた夕方の夏莱オフィス。窓から差し込む夕陽が、部屋を優しく染めている。",
-      "inlineAction": null,
       "original": "旁白|||橘望と光の訪問を受けた夕方の夏莱オフィス。窓から差し込む夕陽が、部屋を優しく染めている。"
     },
     {
@@ -37,10 +36,8 @@ const defaultGameData = {
     {
       "type": "dialogue",
       "character": "旁白",
-      "position": null,
       "sprite": "",
       "text": "「新しい路線、見に行きましょうか。せっかく来てくれたんですし」",
-      "inlineAction": null,
       "original": "旁白|||「新しい路線、見に行きましょうか。せっかく来てくれたんですし」"
     },
     {
@@ -62,7 +59,6 @@ const defaultGameData = {
       "position": "R",
       "sprite": "光微笑",
       "text": "えへへ……先生と一緒に……楽しみ……。",
-      "inlineAction": null,
       "original": "橘光|R|光微笑|えへへ……先生と一緒に……楽しみ……。"
     },
     {
@@ -94,10 +90,8 @@ const defaultGameData = {
     {
       "type": "dialogue",
       "character": "旁白",
-      "position": null,
       "sprite": "",
       "text": "数分後、CCCの列車制御室。最新鋭の制御パネルが並ぶ様子は、まるで未来の指令センターのようだ。",
-      "inlineAction": null,
       "original": "旁白|||数分後、CCCの列車制御室。最新鋭の制御パネルが並ぶ様子は、まるで未来の指令センターのようだ。"
     },
     {
@@ -106,7 +100,6 @@ const defaultGameData = {
       "position": "L",
       "sprite": "望正常A",
       "text": "ほらほら先生！これが私たちの新しいベイビーです！最新型の制御システムを搭載した特急列車！スピードも快適性も、今までの比じゃないんですよ！",
-      "inlineAction": null,
       "original": "橘望|L|望正常A|ほらほら先生！これが私たちの新しいベイビーです！最新型の制御システムを搭載した特急列車！スピードも快適性も、今までの比じゃないんですよ！"
     },
     {
@@ -115,7 +108,6 @@ const defaultGameData = {
       "position": "R",
       "sprite": "光正常A",
       "text": "うん……私たちで、設計から……全部……。望が、とっても頑張った……。",
-      "inlineAction": null,
       "original": "橘光|R|光正常A|うん……私たちで、設計から……全部……。望が、とっても頑張った……。"
     },
     {
@@ -147,7 +139,6 @@ const defaultGameData = {
       "position": "C",
       "sprite": "阿罗娜默认",
       "text": "わぁ！すごいですね！新しい制御パネルの設計、とても効率的です！阿罗娜も勉強になります！",
-      "inlineAction": null,
       "original": "阿罗娜|C|阿罗娜默认|わぁ！すごいですね！新しい制御パネルの設計、とても効率的です！阿罗娜も勉強になります！"
     },
     {
@@ -156,7 +147,6 @@ const defaultGameData = {
       "position": "L",
       "sprite": "望正常B",
       "text": "でしょでしょ？特に自慢なのは、新開発した自動運転システム！これがまた賢いんですよ。天候や乗客数に応じて、最適な速度とルートを自動で選択してくれるんです！",
-      "inlineAction": null,
       "original": "橘望|L|望正常B|でしょでしょ？特に自慢なのは、新開発した自動運転システム！これがまた賢いんですよ。天候や乗客数に応じて、最適な速度とルートを自動で選択してくれるんです！"
     },
     {
@@ -165,7 +155,6 @@ const defaultGameData = {
       "position": "R",
       "sprite": "光认真",
       "text": "安全性も……バッチリ……。何度も……テストした……。",
-      "inlineAction": null,
       "original": "橘光|R|光认真|安全性も……バッチリ……。何度も……テストした……。"
     },
     {
@@ -174,7 +163,6 @@ const defaultGameData = {
       "position": "C",
       "sprite": "阿罗娜默认",
       "text": "素晴らしいです！でも、自動運転なのに、なぜ運転席はそのままなんですか？",
-      "inlineAction": null,
       "original": "阿罗娜|C|阿罗娜默认|素晴らしいです！でも、自動運転なのに、なぜ運転席はそのままなんですか？"
     },
     {
@@ -196,16 +184,13 @@ const defaultGameData = {
       "position": "R",
       "sprite": "光微笑",
       "text": "望は……運転が大好き……。私も……。",
-      "inlineAction": null,
       "original": "橘光|R|光微笑|望は……運転が大好き……。私も……。"
     },
     {
       "type": "dialogue",
       "character": "旁白",
-      "position": null,
       "sprite": "",
       "text": "制御室の大きなモニターには、新路線の完成予想図が映し出されている。グラフや数値が次々と更新され、システムの稼働状況を示している。",
-      "inlineAction": null,
       "original": "旁白|||制御室の大きなモニターには、新路線の完成予想図が映し出されている。グラフや数値が次々と更新され、システムの稼働状況を示している。"
     },
     {
@@ -214,7 +199,6 @@ const defaultGameData = {
       "position": "L",
       "sprite": "望正常A",
       "text": "先生！ちょっと運転席に座ってみませんか？特別に許可しちゃいます！",
-      "inlineAction": null,
       "original": "橘望|L|望正常A|先生！ちょっと運転席に座ってみませんか？特別に許可しちゃいます！"
     },
     {
@@ -223,7 +207,6 @@ const defaultGameData = {
       "position": "R",
       "sprite": "光害羞",
       "text": "私たちが……教えるから……。大丈夫……。",
-      "inlineAction": null,
       "original": "橘光|R|光害羞|私たちが……教えるから……。大丈夫……。"
     },
     {
@@ -290,7 +273,9 @@ const processScene = async () => {
     rightCharacter,
     backgroundStyle,
     cgImage,
-    overlayOpacity
+    overlayOpacity,
+    showChoices,
+    choices
   )
 }
 
@@ -298,10 +283,17 @@ const toggleHistory = () => {
   showHistoryModal.value = !showHistoryModal.value
 }
 
-const handleChoiceClick = (choiceAction: () => void) => {
+const handleChoiceSelection = (choiceAction: () => void) => {
+  // Execute the choice action (triggers setinput and updates index)
   choiceAction()
+  
+  // Hide choices UI
   showChoices.value = false
-  gameState.value.showingChoices = false
+  
+  // Continue processing the next scene
+  setTimeout(() => {
+    processScene()
+  }, 50)
 }
 
 // Initialize on mount
@@ -404,20 +396,12 @@ onMounted(async () => {
         :org-name="'研讨会'"
       />
 
-      <!-- Choices Area -->
-      <div
-        v-if="showChoices"
-        :class="`galgame-choices galgame-choices-${messageId}`"
-      >
-        <button
-          v-for="(choice, index) in choices"
-          :key="index"
-          :class="`galgame-choice galgame-choice-${messageId}`"
-          @click.stop="handleChoiceClick(choice.action)"
-        >
-          {{ choice.text }}
-        </button>
-      </div>
+      <!-- Choices Component -->
+      <GalgameChoices
+        :show-choices="showChoices"
+        :choices="choices"
+        @choice-click="handleChoiceSelection"
+      />
 
       <!-- Overlay -->
       <div
@@ -564,42 +548,6 @@ onMounted(async () => {
   }
 }
 
-
-/* 选项区域 */
-.galgame-choices {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 300px;
-  z-index: 6;
-  user-select: none;
-}
-
-/* 选项按钮 */
-.galgame-choice {
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: #333;
-  font-weight: bold;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  user-select: none;
-
-  &:hover {
-    background-color: rgba(240, 240, 240, 0.9);
-    transform: translateY(-2px);
-  }
-}
 
 /* 遮罩层 */
 .galgame-overlay {

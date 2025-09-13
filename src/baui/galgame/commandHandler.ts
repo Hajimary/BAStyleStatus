@@ -54,6 +54,14 @@ export async function handleCommand(
       handleEffect(args[0])
       break
 
+    case 'choice':
+      // Choice handling is done in sceneProcessor
+      break
+
+    case 'wait':
+      // Wait handling if needed
+      break
+
     default:
       console.log('Unknown command:', command)
   }
